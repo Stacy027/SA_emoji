@@ -105,8 +105,8 @@ def build_word_dict(train_path):
                 words.append(w)
             for e in emo:
                 emojis.append(e)
-    words = list(set(words))  # 去重
-    words = sorted(words)  # 排序
+    words = list(set(words))  # remove duplication
+    words = sorted(words)  # sort
 
     emojis = list(set(emojis))
     emojis = sorted(emojis)
@@ -282,7 +282,7 @@ class TextAttention(nn.Module):
         output2, hidden = self.lstm2(output1)
         output_att2, len_s = pad_packed_sequence(output2, batch_first=True)  # hidden layer
         """self-attention"""
-        # 计算生成QKV矩阵
+        # generate QKV matrices
         Q = self.Q_linear(output_att2)
         K = self.K_linear(output_att2).permute(0, 2, 1)  # transpose
         V = self.V_linear(output_att2)
@@ -338,7 +338,7 @@ class EmojiAttention(nn.Module):
         return ave_embeds
 
     def co_attention_e(self, hidden, embeds_emo):
-        # 计算生成QKV矩阵
+        # generate QKV matrices
         Q = self.Q1(hidden)
         K = self.K1(embeds_emo).permute(0, 2, 1)  # transpose
         V = self.V1(embeds_emo)
@@ -349,7 +349,7 @@ class EmojiAttention(nn.Module):
         return eco_att
 
     def co_attention_h(self, hidden, embeds_emo):
-        # 计算生成QKV矩阵
+        # generate QKV matrices
         Q = self.Q2(embeds_emo)
         K = self.K2(hidden).permute(0, 2, 1)  # transpose
         V = self.V2(hidden)
